@@ -25,25 +25,8 @@ export class ProductListComponent {
       })
     );
 
-  // ngOnInit(): void {
-  //   // this.sub = this.productService.getProducts()
-  //   this.sub = this.products$.subscribe({
-  //     next: products => {
-  //       this.products = products;
-  //       console.log(this.products);
-  //     },
-  //     // error: err => this.errorMessage = err,
-  //   });
-  // }
-  // ngOnDestroy(): void {
-  //   this.sub.unsubscribe();
-  // }
-  // Just enough here for the template to compile
   pageTitle = 'Products';
   errorMessage = '';
-
-  // Products
-  // products: Product[] = [];
 
   // Selected product id to highlight the entry
   selectedProductId: number = 0;

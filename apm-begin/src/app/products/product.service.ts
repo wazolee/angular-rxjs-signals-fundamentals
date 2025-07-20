@@ -25,20 +25,6 @@ export class ProductService {
         catchError(err => this.handleError(err)),
       );
 
-  // getProducts(): Observable<Product[]> {
-  //   return this.http.get<Product[]>(this.productsUrl)
-  //     .pipe(
-  //       tap(() => console.log('htp.get pipe')),
-  //       catchError(err => this.handleError(err)),
-  //       //   {
-  //       //   console.error(err);
-  //       //   return of(ProductData.products);
-  //       // })
-  //     );
-  // }s
-
-
-
   getProduct(id: number): Observable<Product> {
     const productUrl = this.productsUrl + '/' + id;
     return this.http.get<Product>(productUrl)
@@ -62,6 +48,5 @@ export class ProductService {
   private handleError(err: HttpErrorResponse): Observable<never> {
     const formattedMessage = this.errorService.formatError(err);
     return throwError(() => formattedMessage);
-    // throw formattedMessage;
   }
 }
