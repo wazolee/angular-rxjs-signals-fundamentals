@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { catchError, concatMap, EMPTY, map, mergeMap, Observable, of, switchMap, tap, throwError } from 'rxjs';
+import { catchError, concatMap, EMPTY, map, mergeMap, Observable, of, shareReplay, switchMap, tap, throwError } from 'rxjs';
 import { Product } from './product';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { ProductData } from './product-data';
@@ -21,7 +21,8 @@ export class ProductService {
 
   readonly products$ = this.http.get<Product[]>(this.productsUrl)
       .pipe(
-        tap(() => console.log('htp.get pipe')),
+        tap((data) => console.log(JSON.stringify(data))),
+        shareReplay(1),
         catchError(err => this.handleError(err)),
       );
 
