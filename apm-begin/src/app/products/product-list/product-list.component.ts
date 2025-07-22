@@ -26,11 +26,13 @@ export class ProductListComponent {
 
   pageTitle = 'Products';
   errorMessage = '';
-
+  
   // Selected product id to highlight the entry
-  selectedProductId: number = 0;
+  // selectedProductId: number = 0;
+  readonly selectedProductId$ = this.productService.productSelected$;
 
   onSelected(productId: number): void {
-    this.selectedProductId = productId;
+    this.productService.productSelected(productId);
+    // this.selectedProductId = productId;
   }
 }
