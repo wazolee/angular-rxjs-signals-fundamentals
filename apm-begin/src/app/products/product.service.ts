@@ -14,10 +14,7 @@ import { Review } from '../reviews/review';
 export class ProductService {
   private productsUrl = 'api/products';
 
-  // private productSelectedSubject = new BehaviorSubject<number | undefined>(undefined);
-  // readonly productSelected$ = this.productSelectedSubject.asObservable();
   selectedProductId = signal<number | undefined>(undefined);
-
 
   constructor(private http: HttpClient,
     private reviewService: ReviewService,
@@ -48,31 +45,52 @@ export class ProductService {
   //   }
   // });
 
-  private productResult$ = toObservable(this.selectedProductId)
+  // private productResult1$ = toObservable(this.selectedProductId)
+  //   .pipe(
+  //     filter(Boolean),
+  //     switchMap(id => {
+  //       const productUrl = this.productsUrl + '/' + id;
+  //       return this.http.get<Product>(productUrl)
+  //         .pipe(
+  //           tap(() => console.log('htp.get by id pipe')),
+  //           switchMap((product) => this.getProductWithReviews(product)),
+  //           catchError((err) => of({
+  //             data: undefined,
+  //             error: this.errorService.formatError(err)
+  //           } as Result<Product>)),
+  //         );
+  //     }),
+  //     map(p => ({ data: p }) as Result<Product>)
+  //   );
+
+  private foundProduct = computed(() => {
+    // Dependent signals
+    const p = this.products();
+    const id = this.selectedProductId();
+    if (p && id) {
+      return p.find(product => product.id === id);
+    }
+    return undefined;
+  });
+
+  private productResult$ = toObservable(this.foundProduct)
     .pipe(
       filter(Boolean),
-      switchMap(id => {
-        const productUrl = this.productsUrl + '/' + id;
-        return this.http.get<Product>(productUrl)
-          .pipe(
-            tap(() => console.log('htp.get by id pipe')),
-            switchMap((product) => this.getProductWithReviews(product)),
-            catchError((err) => of({
-              data: undefined,
-              error: this.errorService.formatError(err)
-            } as Result<Product>)),
-          );
-      }),
-      map(p => ({ data: p }) as Result<Product>)
+      switchMap(product => this.getProductWithReviews(product)),
+      map(p => ({ data: p } as Result<Product>)),
+      catchError(err => of({
+        data: undefined,
+        error: this.errorService.formatError(err)
+      } as Result<Product>))
     );
 
   private productResult = toSignal(this.productResult$);
-
   product = computed(() => this.productResult()?.data);
-  productError = computed(()=> this.productResult()?.error);
-  // product$ = combineLatest([
-  //   this.productSelected$,
-  //   this.products$
+  productError = computed(() => this.productResult()?.error);
+  
+  // productResult2$ = combineLatest([
+  //   this.productSelected,
+  //   this.products
   // ]).pipe(
   //   map(([selectedProductId, products]) =>
   //     products.find(product => product.id === selectedProductId)
@@ -83,7 +101,6 @@ export class ProductService {
   // );
 
   productSelected(selectedProductId: number): void {
-    // this.productSelectedSubject.next(selectedProductId);
     this.selectedProductId.set(selectedProductId);
   }
 
