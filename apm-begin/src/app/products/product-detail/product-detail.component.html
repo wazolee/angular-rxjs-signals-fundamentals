@@ -1,7 +1,7 @@
 <div class="card"
-     *ngIf="product$ | async as product">
+     *ngIf="product() as product">
   <div class="card-header">
-    {{product.productName}}
+    {{pageTitle()}}
   </div>
 
   <div class="card-body">
@@ -56,7 +56,7 @@
 </div>
 
 <div class="card"
-     *ngIf="errorMessage">
+     *ngIf="errorMessage()">
   <div class="card-header">
     Product Detail
   </div>

@@ -15,25 +15,17 @@ import { CartService } from 'src/app/cart/cart.service';
 })
 export class ProductListComponent {
   constructor(private productService: ProductService,
-    private cartService:CartService
+    private cartService: CartService
   ) { }
 
   products = this.productService.products;
-  
-  // readonly products$ = this.productService.products$
-  //   .pipe(
-  //     catchError(err => { //best practise errorhandling
-  //       this.errorMessage = err;
-  //       return EMPTY;
-  //     })
-  //   );
+  errorMessage = this.productService.productsError;
 
   pageTitle = 'Products';
-  errorMessage = '';
-  
+
   // Selected product id to highlight the entry
   // selectedProductId: number = 0;
-  readonly selectedProductId$ = this.productService.productSelected$;
+  selectedProductId = this.productService.selectedProductId;
 
   onSelected(productId: number): void {
     this.productService.productSelected(productId);

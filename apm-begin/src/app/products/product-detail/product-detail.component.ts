@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChange, SimpleChanges } from '@angular/core';
+import { Component, computed, Input, OnChanges, OnDestroy, OnInit, SimpleChange, SimpleChanges } from '@angular/core';
 
 import { NgIf, NgFor, CurrencyPipe, AsyncPipe } from '@angular/common';
 import { Product } from '../product';
@@ -12,35 +12,40 @@ import { CartService } from 'src/app/cart/cart.service';
   standalone: true,
   imports: [NgIf, NgFor, CurrencyPipe, AsyncPipe]
 })
-export class ProductDetailComponent 
+export class ProductDetailComponent
 // implements OnChanges, OnDestroy 
 {
   // Just enough here for the template to compile
   // @Input() productId: number = 0;
   strProductId: string = 'productId';
-  errorMessage = '';
+  errorMessage = this.productService.productError;
   cartServiceError = this.cartService.error;
 
   // Product to display
   // product: Product | null = null;
-  readonly product$ = this.productService.product$.pipe(
-          tap(() => console.log('productdetail pipe')),
-          catchError((err) => {
-            this.errorMessage = err;
-            return EMPTY;
-          })
-        );
+  // readonly product$ = this.productService.product$.pipe(
+  //         tap(() => console.log('productdetail pipe')),
+  //         catchError((err) => {
+  //           this.errorMessage = err;
+  //           return EMPTY;
+  //         })
+  //       );
 
+  product = this.productService.product;
+  
   // Set the page title
-  // pageTitle = this.product ? `Product Detail for: ${this.product.productName}` : 'Product Detail';
+  pageTitle = computed(() => this.product 
+    ? `Detail: ${this.product()?.productName}` 
+    : 'Detail'
+  );
 
-    cartItems = this.cartService.cartItems;
+  cartItems = this.cartService.cartItems;
   // sub!: Subscription;
   constructor(private productService: ProductService,
     private cartService: CartService,
   ) { }
 
-  productSelected$ = this.productService.productSelected$;
+  productSelected$ = this.productService.selectedProductId;
 
   // ngOnChanges(changes: SimpleChanges): void {
   //   const id = changes[this.strProductId].currentValue;
@@ -65,5 +70,5 @@ export class ProductDetailComponent
   // addToCart(product: Product) {
   //   this.cartService.addToCart(product);
   // }
-  addToCart = (product:Product) => this.cartService.addToCart(product);
+  addToCart = (product: Product) => this.cartService.addToCart(product);
 }
