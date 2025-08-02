@@ -18,15 +18,14 @@ export class ProductListComponent {
     private cartService:CartService
   ) { }
 
-  products = this.productService.products;
-  
-  // readonly products$ = this.productService.products$
-  //   .pipe(
-  //     catchError(err => { //best practise errorhandling
-  //       this.errorMessage = err;
-  //       return EMPTY;
-  //     })
-  //   );
+  // sub!: Subscription;
+  readonly products$ = this.productService.products$
+    .pipe(
+      catchError(err => { //best practise errorhandling
+        this.errorMessage = err;
+        return EMPTY;
+      })
+    );
 
   pageTitle = 'Products';
   errorMessage = '';

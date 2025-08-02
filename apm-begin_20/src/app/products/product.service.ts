@@ -22,7 +22,7 @@ export class ProductService {
     private reviewService: ReviewService,
     private errorService: HttpErrorService) { }
 
-  private products$ = this.http.get<Product[]>(this.productsUrl)
+  readonly products$ = this.http.get<Product[]>(this.productsUrl)
     .pipe(
       tap((data) => console.log(JSON.stringify(data))),
       shareReplay(1),
